@@ -7,11 +7,11 @@ export const Navbar = () => {
 			<div className="container">
 				<Link to="/" className="text-decoration-none">
 					<span className=" mb-0">
-						<h1 className="text-success fs-2" >Tacostoso</h1>
+						<h1 className="text-success fs-2" >Tacontodo</h1>
 					</span>
 				</Link>
 				<div className="ml-auto">
-					<Link to="/demo">
+					<Link to="/order">
 						<button className="btn btn-success">
 							Arma tu 🌮
 						</button>
