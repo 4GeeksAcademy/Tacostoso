@@ -30,3 +30,18 @@ def get_orders():
 def get_proteins():
     proteins = Protein.query.all()
     return jsonify([ protein.serialize() for protein in proteins ]), 200
+
+@api.route('/sauces', methods=['GET'])
+def get_sauces():
+    sauces = Sauce.query.all()
+    return jsonify([ sauce.serialize() for sauce in sauces ]), 200
+
+@api.route('/cheeses', methods=['GET'])
+def get_cheeses():
+    cheeses = Cheese.query.all()
+    return jsonify([ cheese.serialize() for cheese in cheeses ]), 200
+
+@api.route('/vegetables', methods=['GET'])
+def get_vegetables():
+    vegetables = Vegetable.query.all()
+    return jsonify([ vegetable.serialize() for vegetable in vegetables ]), 200

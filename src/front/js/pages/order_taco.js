@@ -58,36 +58,50 @@ export const OrderTaco = () => {
         { name: "Cheese", price: 1 },
     ];
 
-    const proteinas = [
-        { name: "Beef", price: 0 },
-        { name: "Chicken", price: 0 },
-        { name: "Pork", price: 0 },
-        { name: "Fish", price: 0 },
-        { name: "Shrimp", price: 0 },
-        { name: "Veggie", price: 0 },
-    ];
+    const [proteinas, setProteinas] = React.useState([]);
+    const [veggies, setVeggies] = React.useState([]);
+    const [quesos, setQuesos] = React.useState([]);
+    const [salsas, setSalsas] = React.useState([]);
 
-    const veggies = [
-        { name: "Lettuce", price: 0 },
-        { name: "Tomato", price: 0 },
-        { name: "Cheese", price: 0 },
-        { name: "Guacamole", price: 0 },
-    ];
+    const getProteins = () => {
+        fetch(process.env.BACKEND_URL + "/api/proteins")
+            .then((response) => response.json())
+            .then((data) => {
+                setProteinas(data);
+            });
+    };
 
-    const quesos = [
-        { name: "Cheddar", price: 0 },
-        { name: "Jack", price: 0 },
-        { name: "Cotija", price: 0 },
-        { name: "Queso Fresco", price: 0 },
-        { name: "Queso Blanco", price: 0 },
-    ];
+    const getVeggies = () => {
+        fetch(process.env.BACKEND_URL + "/api/vegetables")
+            .then((response) => response.json())
+            .then((data) => {
+                setVeggies(data);
+            });
+    }
 
-    const salsas = [
-        { name: "Salsa Roja", price: 0 },
-        { name: "Salsa Verde", price: 0 },
-        { name: "Pico de Gallo", price: 0 },
-        { name: "Salsa de Cilantro", price: 0 },
-    ];
+    const getQuesos = () => {
+        fetch(process.env.BACKEND_URL + "/api/cheeses")
+            .then((response) => response.json())
+            .then((data) => {
+                setQuesos(data);
+            });
+    }
+
+    const getSalsas = () => {
+        fetch(process.env.BACKEND_URL + "/api/sauces")
+            .then((response) => response.json())
+            .then((data) => {
+                setSalsas(data);
+            });
+    }
+
+    React.useEffect(() => {
+        getProteins();
+        getVeggies();
+        getQuesos();
+        getSalsas();
+    }, []);
+
 
     const onSelectedKey = (checked, key, value) => {
         if (checked) {
