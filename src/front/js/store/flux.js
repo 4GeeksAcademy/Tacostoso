@@ -27,24 +27,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					description: "El taco de cabeza es un taco que lleva carne de cabeza de res cocida. cebollas y cilantro.",
 					image_url: "https://i.pinimg.com/564x/40/8c/24/408c24f87e6350a9d6f84f449e7a207b.jpg"
 				},
-				// {
-				// 	id: 5,
-				// 	name: "Taco de Lengua",
-				// 	description: "El taco de lengua es un taco que lleva carne de lengua de res cocida.",
-				// 	image_url: "https://www.cocinavital.mx/wp-content/uploads/2019/02/tacos-de-lengua.jpg"
-				// },
-				// {
-				// 	id: 6,
-				// 	name: "Taco de Tripa",
-				// 	description: "El taco de tripa es un taco que lleva carne de tripa de res cocida.",
-				// 	image_url: "https://www.cocinavital.mx/wp-content/uploads/2019/02/tacos-de-tripa.jpg"
-				// },
-				// {
-				// 	id: 7,
-				// 	name: "Taco de Suadero",
-				// 	description: "El taco de suadero es un taco que lleva carne de suadero de res cocida.",
-				// 	image_url: "https://www.cocinavital.mx/wp-content/uploads/2019/02/tacos-de-suadero.jpg"
-				// },
 			],
 			demo: [
 				{
@@ -90,6 +72,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+
+			newOrder: (order) => {
+				console.log(order);
 			}
 		}
 	};

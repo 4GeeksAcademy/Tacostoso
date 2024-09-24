@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Order, Tortilla, Protein, Sauce, Cheese, Vegetable
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from datetime import datetime
 
 api = Blueprint('api', __name__)
 
@@ -51,3 +52,23 @@ def get_cheeses():
 def get_vegetables():
     vegetables = Vegetable.query.all()
     return jsonify([ vegetable.serialize() for vegetable in vegetables ]), 200
+
+@api.route('/order', methods=['POST'])
+def create_order():
+    request_body = request.get_json()
+
+
+    new_order = Order(
+        status=request_body["status"],
+        order_datetime=datetime.now(),
+        user=User.query.get(request_body["user_id"]),
+        tortilla=Tortilla.query.get(request_body["tortilla_id"]),
+        proteins=[Protein.query.get(protein_id) for protein_id in request_body["proteins"]],
+        sauces=[Sauce.query.get(sauce_id) for sauce_id in request_body["sauces"]],
+        cheeses=[Cheese.query.get(cheese_id) for cheese_id in request_body["cheeses"]],
+        vegetables=[Vegetable.query.get(vegetable_id) for vegetable_id in request_body["vegetables"]]
+    )
+
+    db.session.add(new_order)
+    db.session.commit()
+    return jsonify(new_order.simple_serialize()), 200

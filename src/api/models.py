@@ -166,6 +166,18 @@ class Order(db.Model):
     vegetables = db.relationship('Vegetable', secondary=vegetable_association, backref='order', lazy=True)
 
 
+    def __init__(self, status, order_datetime, user, tortilla, vegetables, proteins, sauces, cheeses):
+        self.status = status
+        self.order_datetime = order_datetime
+        
+        self.user = user
+        self.tortilla = tortilla
+
+        self.proteins = proteins
+        self.sauces = sauces
+        self.cheeses = cheeses
+        self.vegetables = vegetables
+
     def __repr__(self):
         return f'<Order {self.id}>'
 
@@ -181,7 +193,11 @@ class Order(db.Model):
             "cheeses": [cheese.serialize() for cheese in self.cheeses],
             "vegetables": [vegetable.serialize() for vegetable in self.vegetables],
             
-            "total": sum([protein.price for protein in self.proteins]) + self.tortilla.price,
+            "total": sum([protein.price for protein in self.proteins]) +
+            sum([sauce.price for sauce in self.sauces]) +
+            sum([cheese.price for cheese in self.cheeses]) +
+            sum([vegetable.price for vegetable in self.vegetables])
+             + self.tortilla.price,
             "user": self.user.serialize()
         }
 
@@ -190,6 +206,11 @@ class Order(db.Model):
             "id": self.id,
             "status": self.status,
             "order_datetime": self.order_datetime,
-            "total": sum([protein.price for protein in self.proteins]) + self.tortilla.price,
+            "total": sum([protein.price for protein in self.proteins]) +
+            sum([sauce.price for sauce in self.sauces]) +
+            sum([cheese.price for cheese in self.cheeses]) +
+            sum([vegetable.price for vegetable in self.vegetables])
+             + self.tortilla.price,
+            
             "user": self.user.serialize()
         }

@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Context } from "../store/appContext";
 
-const IngredientRadius = ({ name, price, tortillaValue, onUnChecked }) => {
+const IngredientRadius = ({ name, price, tortillaValue, onUnChecked, tortillaId }) => {
     return (
         <div className="col-12 my-2">
-            <div class="row border-bottom border-dark">
+            <div className="row border-bottom border-dark">
                 <div className="col-6 m-0 p-0">
                     <h2 className="fs-4 fw-lighter">{name}</h2>
                 </div>
-                <div class="form-check col-6 justify-content-end d-flex">
-                    <input class="form-check-input form-check-input-checked-bg-success"
-                        type="checkbox" checked={tortillaValue == name} id={"tortilla-" + name}
+                <div className="form-check col-6 justify-content-end d-flex">
+                    <input className="form-check-input form-check-input-checked-bg-success"
+                        type="checkbox" checked={tortillaValue == tortillaId} id={"tortilla-" + name}
                         onChange={(e) => {
                             onUnChecked();
                         }}
@@ -24,12 +25,12 @@ const IngredientOption = ({ name, price, type, onSelect }) => {
 
     return (<>
         <div className="col-12 my-2">
-            <div class="row border-bottom border-dark">
+            <div className="row border-bottom border-dark">
                 <div className="col-6 m-0 p-0">
                     <h2 className="fs-4 fw-lighter">{name}</h2>
                 </div>
-                <div class="form-check col-6 justify-content-end d-flex">
-                    <input class="form-check-input form-check-input-checked-bg-success" type="checkbox" value={name} id={name}
+                <div className="form-check col-6 justify-content-end d-flex">
+                    <input className="form-check-input form-check-input-checked-bg-success" type="checkbox" value={name} id={name}
                         onChange={(e) => {
                             onSelect(e.target.checked);
                         }}
@@ -42,6 +43,8 @@ const IngredientOption = ({ name, price, type, onSelect }) => {
 };
 
 export const OrderTaco = () => {
+
+    const { actions } = useContext(Context);
 
     const [order, setOrder] = React.useState({
         tortilla: "",
@@ -136,10 +139,11 @@ export const OrderTaco = () => {
                         <IngredientRadius key={index} {...tortilla}
                             type={"tortilla"}
                             tortillaValue={order.tortilla}
+                            tortillaId={tortilla.id}
                             onUnChecked={() => {
                                 setOrder({
                                     ...order,
-                                    tortilla: tortilla.name,
+                                    tortilla: tortilla.id,
                                 });
                             }}
                         />
@@ -153,7 +157,7 @@ export const OrderTaco = () => {
                 {
                     proteinas.map((protein, index) =>
                         <IngredientOption key={index} {...protein}
-                            onSelect={(checked) => onSelectedKey(checked, 'proteins', protein.name)}
+                            onSelect={(checked) => onSelectedKey(checked, 'proteins', protein.id)}
                         />
                     )
                 }
@@ -166,7 +170,7 @@ export const OrderTaco = () => {
                 {
                     veggies.map((vege, index) =>
                         <IngredientOption key={index} {...vege}
-                            onSelect={(checked) => onSelectedKey(checked, 'veggie', vege.name)}
+                            onSelect={(checked) => onSelectedKey(checked, 'veggie', vege.id)}
                         />
                     )
                 }
@@ -178,7 +182,7 @@ export const OrderTaco = () => {
                 {
                     quesos.map((cheese, index) =>
                         <IngredientOption key={index} {...cheese}
-                            onSelect={(checked) => onSelectedKey(checked, 'cheese', cheese.name)}
+                            onSelect={(checked) => onSelectedKey(checked, 'cheese', cheese.id)}
                         />
                     )
                 }
@@ -190,7 +194,7 @@ export const OrderTaco = () => {
                 {
                     salsas.map((sals, index) =>
                         <IngredientOption key={index} {...sals}
-                            onSelect={(checked) => onSelectedKey(checked, 'salsa', sals.name)}
+                            onSelect={(checked) => onSelectedKey(checked, 'salsa', sals.id)}
                         />
                     )
                 }
@@ -198,7 +202,7 @@ export const OrderTaco = () => {
                     <button className="btn btn-danger mx-2">Cancel</button>
                     <button className="btn btn-success mx-2"
                         onClick={() => {
-                            console.log(order);
+                            actions.newOrder(order);
                         }}
                     >
                         Order
