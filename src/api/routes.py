@@ -21,6 +21,12 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@api.route('/tortillas', methods=['GET'])
+def get_tortillas():
+    tortillas = Tortilla.query.all()
+    return jsonify([ tortilla.serialize() for tortilla in tortillas ]), 200
+
+
 @api.route('/orders', methods=['GET'])
 def get_orders():
     orders = Order.query.all()

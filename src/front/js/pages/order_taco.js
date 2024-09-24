@@ -51,13 +51,7 @@ export const OrderTaco = () => {
         salsa: [],
     });
 
-    const tortillas = [
-        { name: "Corn | Soft", price: 0 },
-        { name: "Corn | Hard", price: 0 },
-        { name: "Bombshell", price: 1 },
-        { name: "Cheese", price: 1 },
-    ];
-
+    const [tortillas, setTortillas] = React.useState([]);
     const [proteinas, setProteinas] = React.useState([]);
     const [veggies, setVeggies] = React.useState([]);
     const [quesos, setQuesos] = React.useState([]);
@@ -95,11 +89,20 @@ export const OrderTaco = () => {
             });
     }
 
+    const getTortillas = () => {
+        fetch(process.env.BACKEND_URL + "/api/tortillas")
+            .then((response) => response.json())
+            .then((data) => {
+                setTortillas(data);
+            });
+    }
+
     React.useEffect(() => {
         getProteins();
         getVeggies();
         getQuesos();
         getSalsas();
+        getTortillas();
     }, []);
 
 
