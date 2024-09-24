@@ -75,7 +75,8 @@ class Protein(db.Model):
             "id": self.id,
             "name": self.name,
             "price": self.price,
-            "is_vegan": self.is_vegan
+            "is_vegan": self.is_vegan,
+            "orders": [order.simple_serialize() for order in self.order]
         }
 
 class Vegetable(db.Model):
@@ -132,6 +133,21 @@ protein_association = db.Table('protein_association',
     db.Column('protein_id', db.Integer, db.ForeignKey('protein.id'))
 )
 
+sauce_association = db.Table('sauce_association',
+    db.Column('order_id', db.Integer, db.ForeignKey('order.id')),
+    db.Column('sauce_id', db.Integer, db.ForeignKey('sauce.id'))
+)
+
+queso_association = db.Table('queso_association',
+    db.Column('order_id', db.Integer, db.ForeignKey('order.id')),
+    db.Column('cheese_id', db.Integer, db.ForeignKey('cheese.id'))
+)
+
+vegetable_association = db.Table('vegetable_association',
+    db.Column('order_id', db.Integer, db.ForeignKey('order.id')),
+    db.Column('vegetable_id', db.Integer, db.ForeignKey('vegetable.id'))
+)
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(120), unique=False, nullable=False)
@@ -145,6 +161,10 @@ class Order(db.Model):
     tortilla = db.relationship('Tortilla', backref='order', lazy=True)
 
     proteins = db.relationship('Protein', secondary=protein_association, backref='order', lazy=True)
+    sauces = db.relationship('Sauce', secondary=sauce_association, backref='order', lazy=True)
+    cheeses = db.relationship('Cheese', secondary=queso_association, backref='order', lazy=True)
+    vegetables = db.relationship('Vegetable', secondary=vegetable_association, backref='order', lazy=True)
+
 
     def __repr__(self):
         return f'<Order {self.id}>'
@@ -157,6 +177,19 @@ class Order(db.Model):
             "tortilla": self.tortilla.serialize(),
             "proteins": [protein.serialize() for protein in self.proteins],
             # "total": self.total,
+            "sauces": [sauce.serialize() for sauce in self.sauces],
+            "cheeses": [cheese.serialize() for cheese in self.cheeses],
+            "vegetables": [vegetable.serialize() for vegetable in self.vegetables],
+            
+            "total": sum([protein.price for protein in self.proteins]) + self.tortilla.price,
+            "user": self.user.serialize()
+        }
+
+    def simple_serialize(self):
+        return {
+            "id": self.id,
+            "status": self.status,
+            "order_datetime": self.order_datetime,
             "total": sum([protein.price for protein in self.proteins]) + self.tortilla.price,
             "user": self.user.serialize()
         }

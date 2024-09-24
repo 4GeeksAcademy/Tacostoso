@@ -25,3 +25,8 @@ def handle_hello():
 def get_orders():
     orders = Order.query.all()
     return jsonify([ order.serialize() for order in orders ]), 200
+
+@api.route('/proteins', methods=['GET'])
+def get_proteins():
+    proteins = Protein.query.all()
+    return jsonify([ protein.serialize() for protein in proteins ]), 200
