@@ -74,8 +74,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 
-			newOrder: (order) => {
+			newOrder: async (order) => {
 				console.log(order);
+
+				const resp = await fetch(process.env.BACKEND_URL + "/api/order", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						user_id: 1,
+						status: "pendiente",
+						tortilla_id: order.tortilla,
+						proteins: order.proteins,
+						vegetables: order.veggie,
+						cheeses: order.cheese,
+						sauces: order.salsa
+					})
+				});
+
+				if (resp.ok) {
+					alert("Orden guardada");
+				}
+
+				const data = await resp.json();
+				console.log(data);
+
+
 			}
 		}
 	};
