@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -94,7 +96,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 
 				if (resp.ok) {
-					alert("Orden guardada");
+					toast.success("Order sent!");
+				} else {
+					toast.error("Error sending order");
 				}
 
 				const data = await resp.json();

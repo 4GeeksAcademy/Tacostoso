@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext";
+import toast from 'react-hot-toast';
 
 const IngredientRadius = ({ name, price, tortillaValue, onUnChecked, tortillaId }) => {
     return (
@@ -199,7 +200,18 @@ export const OrderTaco = () => {
                     )
                 }
                 <div className="d-flex justify-content-center">
-                    <button className="btn btn-danger mx-2">Cancel</button>
+                    <button className="btn btn-danger mx-2"
+                        onClick={() => {
+                            setOrder({
+                                tortilla: "",
+                                proteins: [],
+                                veggie: [],
+                                cheese: [],
+                                salsa: [],
+                            });
+                            toast.success("Order canceled");
+                        }}
+                    >Cancel</button>
                     <button className="btn btn-success mx-2"
                         onClick={() => {
                             actions.newOrder(order);
