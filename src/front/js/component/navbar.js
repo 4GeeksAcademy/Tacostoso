@@ -15,12 +15,19 @@ export const Navbar = () => {
 						<h1 className="text-success fs-2" >Tacontodo</h1>
 					</span>
 				</Link>
-				<div className="ml-auto">
+				<div className="ml-auto flex">
+
+					<Link to="/profile" className="mx-1">
+						{store.user && store.user.email}
+					</Link>
+
 					<Link to="/order">
 						<button className="btn btn-outline-success mx-1">
 							Arma tu 🌮
 						</button>
 					</Link>
+
+
 					{!store.token && <Link to="/login">
 						<button className="btn btn-success mx-1">
 							Login

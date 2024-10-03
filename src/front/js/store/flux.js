@@ -134,6 +134,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					toast.error("You shall not pass! 🧙‍♂️");
 				}
 			},
+
+			logout: () => {
+				localStorage.removeItem("token");
+				setStore({ token: null });
+				setStore({ user: null });
+				toast.success("Logged out! 🎉");
+			},
 		}
 	};
 };
