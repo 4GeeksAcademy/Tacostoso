@@ -141,6 +141,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ user: null });
 				toast.success("Logged out! 🎉");
 			},
+
+			getUserLogged: async () => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/user", {
+					headers: {
+						Authorization: "Bearer " + getStore().token
+					}
+				});
+				if (resp.ok) {
+					toast.success("User logged in! 🎉");
+				} else {
+					localStorage.removeItem("token");
+					setStore({ token: null });
+				}
+				const data = await resp.json();
+				setStore({ user: data });
+			},
+
 		}
 	};
 };
