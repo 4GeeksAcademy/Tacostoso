@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 const Login = () => {
 
+    const { store, actions } = useContext(Context);
+
     const [user, setUser] = useState({});
     const [showPassword, setShowPassword] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (store.token) {
+            navigate("/");
+        }
+    }, []);
 
     return (
         <div className="mx-auto my-auto flex flex-col">
@@ -29,7 +41,7 @@ const Login = () => {
                 </div>
                 <button className="btn btn-link">Forgot your password?</button>
             </div>
-            <button onClick={() => console.log(user)}
+            <button onClick={() => actions.login(user.email, user.password)}
                 className="btn btn-success w-100 mt-2">Login</button>
             <button className="btn btn-primary w-100 mt-2">Register</button>
         </div>

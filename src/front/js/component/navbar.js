@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
+
 
 export const Navbar = () => {
+
+	const { store, actions } = useContext(Context);
+
 	return (
 		<nav className="navbar navbar-light bg-light border-bottom border-success">
 			<div className="container">
@@ -16,11 +21,14 @@ export const Navbar = () => {
 							Arma tu 🌮
 						</button>
 					</Link>
-					<Link to="/login">
+					{!store.token && <Link to="/login">
 						<button className="btn btn-success mx-1">
 							Login
 						</button>
-					</Link>
+					</Link>}
+					{store.token && <button className="btn btn-danger mx-1" onClick={() => actions.logout()}>
+						Logout
+					</button>}
 				</div>
 			</div>
 		</nav>

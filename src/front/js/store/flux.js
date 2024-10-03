@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			user: null,
+			token: localStorage.getItem("token") || null,
 			message: null,
 			tacos: [
 				{
@@ -105,7 +107,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log(data);
 
 
-			}
+			},
+
+			login: async (email, password) => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/login", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password
+					})
+				});
+				const data = await resp.json();
+
+				localStorage.setItem("token", data.token);
+
+				setStore({ token: data.token });
+				setStore({ user: data.user });
+
+				if (resp.ok) {
+					toast.success("Logged in! 🎉");
+				}
+				else {
+					toast.error("You shall not pass! 🧙‍♂️");
+				}
+			},
 		}
 	};
 };
