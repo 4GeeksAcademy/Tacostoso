@@ -79,7 +79,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			newOrder: async (order) => {
-				console.log(order);
+				
+				const store = getStore();
+
+				if(!store.user){
+					toast.error("You must be logged in to order");
+					return;
+				};
 
 				const resp = await fetch(process.env.BACKEND_URL + "/api/order", {
 					method: "POST",
@@ -87,7 +93,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						user_id: 1,
+						user_id: store.user.id,
 						status: "pendiente",
 						tortilla_id: order.tortilla,
 						proteins: order.proteins,
