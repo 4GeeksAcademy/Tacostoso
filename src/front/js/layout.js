@@ -13,6 +13,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 
 import OrderTaco from "./pages/order_taco";
+import Login from "./pages/login";
 
 //create your first component
 const Layout = () => {
@@ -32,6 +33,9 @@ const Layout = () => {
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<OrderTaco />} path="/order" />
                         <Route element={<Single />} path="/single/:theid" />
+
+                        <Route element={<Login />} path="/login" />
+
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

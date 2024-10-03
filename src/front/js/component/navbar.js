@@ -12,8 +12,13 @@ export const Navbar = () => {
 				</Link>
 				<div className="ml-auto">
 					<Link to="/order">
-						<button className="btn btn-success">
+						<button className="btn btn-outline-success mx-1">
 							Arma tu 🌮
+						</button>
+					</Link>
+					<Link to="/login">
+						<button className="btn btn-success mx-1">
+							Login
 						</button>
 					</Link>
 				</div>
