@@ -29,8 +29,19 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     phone = db.Column(db.String(80), unique=False, nullable=True)
 
+    full_name = db.Column(db.String(120), unique=False, nullable=True)
+
     address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=True)
     address = db.relationship('Address', backref='user', lazy=True)
+
+
+    def __init__(self, email, password, full_name, phone, address):
+        self.email = email
+        self.password = password
+        self.full_name = full_name
+        self.phone = phone
+        self.address = address
+        self.is_active = True
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -40,7 +51,8 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "phone": self.phone,
-            "address": self.address.serialize() if self.address else None
+            "address": self.address.serialize() if self.address else None,
+            "full_name": self.full_name,
             # do not serialize the password, its a security breach
         }
     
@@ -166,6 +178,18 @@ class Order(db.Model):
     vegetables = db.relationship('Vegetable', secondary=vegetable_association, backref='order', lazy=True)
 
 
+    def __init__(self, status, order_datetime, user, tortilla, vegetables, proteins, sauces, cheeses):
+        self.status = status
+        self.order_datetime = order_datetime
+        
+        self.user = user
+        self.tortilla = tortilla
+
+        self.proteins = proteins
+        self.sauces = sauces
+        self.cheeses = cheeses
+        self.vegetables = vegetables
+
     def __repr__(self):
         return f'<Order {self.id}>'
 
@@ -181,7 +205,11 @@ class Order(db.Model):
             "cheeses": [cheese.serialize() for cheese in self.cheeses],
             "vegetables": [vegetable.serialize() for vegetable in self.vegetables],
             
-            "total": sum([protein.price for protein in self.proteins]) + self.tortilla.price,
+            "total": sum([protein.price for protein in self.proteins]) +
+            sum([sauce.price for sauce in self.sauces]) +
+            sum([cheese.price for cheese in self.cheeses]) +
+            sum([vegetable.price for vegetable in self.vegetables])
+             + self.tortilla.price,
             "user": self.user.serialize()
         }
 
@@ -190,6 +218,11 @@ class Order(db.Model):
             "id": self.id,
             "status": self.status,
             "order_datetime": self.order_datetime,
-            "total": sum([protein.price for protein in self.proteins]) + self.tortilla.price,
+            "total": sum([protein.price for protein in self.proteins]) +
+            sum([sauce.price for sauce in self.sauces]) +
+            sum([cheese.price for cheese in self.cheeses]) +
+            sum([vegetable.price for vegetable in self.vegetables])
+             + self.tortilla.price,
+            
             "user": self.user.serialize()
         }

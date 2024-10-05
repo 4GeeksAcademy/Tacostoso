@@ -1,6 +1,10 @@
+import toast from "react-hot-toast";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			user: null,
+			token: localStorage.getItem("token") || null,
 			message: null,
 			tacos: [
 				{
@@ -27,24 +31,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					description: "El taco de cabeza es un taco que lleva carne de cabeza de res cocida. cebollas y cilantro.",
 					image_url: "https://i.pinimg.com/564x/40/8c/24/408c24f87e6350a9d6f84f449e7a207b.jpg"
 				},
-				// {
-				// 	id: 5,
-				// 	name: "Taco de Lengua",
-				// 	description: "El taco de lengua es un taco que lleva carne de lengua de res cocida.",
-				// 	image_url: "https://www.cocinavital.mx/wp-content/uploads/2019/02/tacos-de-lengua.jpg"
-				// },
-				// {
-				// 	id: 6,
-				// 	name: "Taco de Tripa",
-				// 	description: "El taco de tripa es un taco que lleva carne de tripa de res cocida.",
-				// 	image_url: "https://www.cocinavital.mx/wp-content/uploads/2019/02/tacos-de-tripa.jpg"
-				// },
-				// {
-				// 	id: 7,
-				// 	name: "Taco de Suadero",
-				// 	description: "El taco de suadero es un taco que lleva carne de suadero de res cocida.",
-				// 	image_url: "https://www.cocinavital.mx/wp-content/uploads/2019/02/tacos-de-suadero.jpg"
-				// },
 			],
 			demo: [
 				{
@@ -90,7 +76,121 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+
+			newOrder: async (order) => {
+
+				const store = getStore();
+
+				if (!store.user) {
+					toast.error("You must be logged in to order");
+					return;
+				};
+
+				const resp = await fetch(process.env.BACKEND_URL + "/api/order", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						user_id: store.user.id,
+						status: "pendiente",
+						tortilla_id: order.tortilla,
+						proteins: order.proteins,
+						vegetables: order.veggie,
+						cheeses: order.cheese,
+						sauces: order.salsa
+					})
+				});
+
+				if (resp.ok) {
+					toast.success("Order sent!");
+				} else {
+					toast.error("Error sending order");
+				}
+
+				const data = await resp.json();
+				console.log(data);
+
+
+			},
+
+			login: async (email, password) => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/login", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password
+					})
+				});
+				const data = await resp.json();
+
+				localStorage.setItem("token", data.token);
+
+				setStore({ token: data.token });
+				setStore({ user: data.user });
+
+				if (resp.ok) {
+					toast.success("Logged in! 🎉");
+				}
+				else {
+					toast.error("You shall not pass! 🧙‍♂️");
+				}
+			},
+
+			logout: () => {
+				localStorage.removeItem("token");
+				setStore({ token: null });
+				setStore({ user: null });
+				toast.success("Logged out! 🎉");
+			},
+
+			getUserLogged: async () => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/user", {
+					headers: {
+						Authorization: "Bearer " + getStore().token
+					}
+				});
+				if (resp.ok) {
+					toast.success("User logged in! 🎉");
+				} else {
+					localStorage.removeItem("token");
+					setStore({ token: null });
+				}
+				const data = await resp.json();
+				setStore({ user: data });
+			},
+
+			register: async (email, fullName, password) => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/register", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						full_name: fullName,
+						password: password
+					})
+				});
+				const data = await resp.json();
+
+				localStorage.setItem("token", data.token);
+
+				setStore({ user: data.user });
+				setStore({ token: data.token });
+
+				if (resp.ok) {
+					toast.success("User registered! 🎉");
+				}
+				else {
+					toast.error("Error registering user 🛑");
+				}
 			}
+
 		}
 	};
 };

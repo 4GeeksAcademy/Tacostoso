@@ -5,15 +5,15 @@ import "../../styles/home.css";
 const Jumbotron = () => {
 
 	return (
-		<div class="alert alert-success border border-warning col-10 mx-auto mt-3 p-5" role="alert">
-			<h1 class="alert-heading">¿Cansado de los mismos sabores? 🌮 </h1>
+		<div className="alert alert-success border border-warning col-10 mx-auto mt-3 p-5" role="alert">
+			<h1 className="alert-heading">¿Cansado de los mismos sabores? 🌮 </h1>
 			<p>
 				Donde cada taco es una fiesta para tus sentidos 🪅.
 				<br />
 				Prepárate para una explosión de sabores auténticos que te harán decir "¡wow!" en cada bocado.
 			</p>
 			<hr />
-			<p class="mb-0">Ni tan costoso!.</p>
+			<p className="mb-0">Ni tan costoso!.</p>
 		</div>
 	);
 };
