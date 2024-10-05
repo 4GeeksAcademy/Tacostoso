@@ -180,7 +180,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				localStorage.setItem("token", data.token);
 
-				setStore({ user: data });
+				setStore({ user: data.user });
 				setStore({ token: data.token });
 
 				if (resp.ok) {
