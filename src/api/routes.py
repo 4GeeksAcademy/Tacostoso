@@ -36,6 +36,27 @@ def login():
         "user": user.serialize() 
     }), 200
 
+@api.route("/register", methods=["POST"])
+def register():
+    email = request.json.get("email", None)
+    password = request.json.get("password", None)
+    full_name = request.json.get("full_name", None)
+
+    if email == None or password == None:
+        return jsonify({"msg": "Missing keys email or password."}), 401
+
+    user = User.query.filter_by(email=email).first()
+
+    if user != None:
+        return jsonify({"msg": "User already exists!"}), 401
+
+    new_user = User(email=email, password=password, full_name=full_name, phone=None, address=None)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify(new_user.serialize()), 200
+
+
 @api.route("/user", methods=["GET"])
 @jwt_required()
 def get_user_logged():

@@ -29,8 +29,19 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     phone = db.Column(db.String(80), unique=False, nullable=True)
 
+    full_name = db.Column(db.String(120), unique=False, nullable=True)
+
     address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=True)
     address = db.relationship('Address', backref='user', lazy=True)
+
+
+    def __init__(self, email, password, full_name, phone, address):
+        self.email = email
+        self.password = password
+        self.full_name = full_name
+        self.phone = phone
+        self.address = address
+        self.is_active = True
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -40,7 +51,8 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "phone": self.phone,
-            "address": self.address.serialize() if self.address else None
+            "address": self.address.serialize() if self.address else None,
+            "full_name": self.full_name,
             # do not serialize the password, its a security breach
         }
     

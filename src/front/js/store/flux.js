@@ -79,10 +79,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			newOrder: async (order) => {
-				
+
 				const store = getStore();
 
-				if(!store.user){
+				if (!store.user) {
 					toast.error("You must be logged in to order");
 					return;
 				};
@@ -163,6 +163,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const data = await resp.json();
 				setStore({ user: data });
 			},
+
+			register: async (email, fullName, password) => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/register", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						full_name: fullName,
+						password: password
+					})
+				});
+				const data = await resp.json();
+
+				if (resp.ok) {
+					toast.success("User registered! 🎉");
+				}
+				else {
+					toast.error("Error registering user 🛑");
+				}
+			}
 
 		}
 	};
