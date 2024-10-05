@@ -17,9 +17,16 @@ export const Navbar = () => {
 				</Link>
 				<div className="ml-auto flex">
 
-					<Link to="/profile" className="mx-1">
-						{store.user && store.user.email}
-					</Link>
+					{
+						!store.user && <div class="spinner-grow text-success spinner-grow-sm" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					}
+					{
+						store.user && <Link to="/profile" className="mx-1">
+							{store.user.full_name}
+						</Link>
+					}
 
 					<Link to="/order">
 						<button className="btn btn-outline-success mx-1">

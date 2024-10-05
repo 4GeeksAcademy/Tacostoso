@@ -178,6 +178,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 				});
 				const data = await resp.json();
 
+				localStorage.setItem("token", data.token);
+
+				setStore({ user: data });
+				setStore({ token: data.token });
+
 				if (resp.ok) {
 					toast.success("User registered! 🎉");
 				}
