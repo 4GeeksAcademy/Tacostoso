@@ -29,19 +29,22 @@ class User(db.Model):
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     phone = db.Column(db.String(80), unique=False, nullable=True)
 
+    profile_image_url = db.Column(db.String(360), unique=False, nullable=True)
+
     full_name = db.Column(db.String(120), unique=False, nullable=True)
 
     address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=True)
     address = db.relationship('Address', backref='user', lazy=True)
 
 
-    def __init__(self, email, password, full_name, phone, address):
+    def __init__(self, email, password, full_name, phone, address, profile_image_url):
         self.email = email
         self.password = password
         self.full_name = full_name
         self.phone = phone
         self.address = address
         self.is_active = True
+        self.profile_image_url = profile_image_url
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -53,6 +56,7 @@ class User(db.Model):
             "phone": self.phone,
             "address": self.address.serialize() if self.address else None,
             "full_name": self.full_name,
+            "profile_image_url": self.profile_image_url
             # do not serialize the password, its a security breach
         }
     

@@ -164,7 +164,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ user: data });
 			},
 
-			register: async (email, fullName, password) => {
+			register: async (email, fullName, password, profileImageUrl) => {
 				const resp = await fetch(process.env.BACKEND_URL + "/api/register", {
 					method: "POST",
 					headers: {
@@ -173,7 +173,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					body: JSON.stringify({
 						email: email,
 						full_name: fullName,
-						password: password
+						password: password,
+						profile_image_url: profileImageUrl //profileImageUrl
 					})
 				});
 				const data = await resp.json();

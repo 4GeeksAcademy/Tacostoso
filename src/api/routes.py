@@ -41,6 +41,7 @@ def register():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     full_name = request.json.get("full_name", None)
+    profile_image = request.json.get("profile_image_url", None)
 
     if email == None or password == None:
         return jsonify({"msg": "Missing keys email or password."}), 401
@@ -50,7 +51,7 @@ def register():
     if user != None:
         return jsonify({"msg": "User already exists!"}), 401
 
-    new_user = User(email=email, password=password, full_name=full_name, phone=None, address=None)
+    new_user = User(email=email, password=password, full_name=full_name, phone=None, address=None, profile_image_url=profile_image)
     db.session.add(new_user)
     db.session.commit()
 
