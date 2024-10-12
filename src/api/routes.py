@@ -7,6 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from datetime import datetime
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+import bcrypt
 
 api = Blueprint('api', __name__)
 
@@ -25,16 +26,19 @@ def login():
 
     if user == None:
         return jsonify({"msg": "User not found!"}), 404
+    
+    password_bytes = bytes(password, 'utf-8')
 
-    if user.password != password:
-        return jsonify({"msg": "Wrong password! You shall not pass! impostor!"}), 401
+    if bcrypt.checkpw(password_bytes, user.password.encode('utf-8')):
 
-    access_token = create_access_token(identity=email)
+        access_token = create_access_token(identity=email)
 
-    return jsonify({
-        "token": access_token,
-        "user": user.serialize() 
-    }), 200
+        return jsonify({
+            "token": access_token,
+            "user": user.serialize() 
+        }), 200
+    
+    return jsonify({"msg": "Invalid password"}), 401
 
 @api.route("/register", methods=["POST"])
 def register():
@@ -51,7 +55,15 @@ def register():
     if user != None:
         return jsonify({"msg": "User already exists!"}), 401
 
-    new_user = User(email=email, password=password, full_name=full_name, phone=None, address=None, profile_image_url=profile_image)
+    bpassword = bytes(password, 'utf-8')
+
+    salt = bcrypt.gensalt(14)
+
+    hashed_password = bcrypt.hashpw(password=bpassword, salt=salt)
+
+    print( hashed_password.decode('utf-8') )
+
+    new_user = User(email=email, password=hashed_password.decode('utf-8'), salt=salt, full_name=full_name, phone=None, address=None, profile_image_url=profile_image)
     db.session.add(new_user)
     db.session.commit()
 
