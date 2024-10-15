@@ -33,23 +33,40 @@ def send_email():
     message = MIMEMultipart("alternative")
     message["Subject"] = "Tacos App - Order Confirmation"
     message["From"] = sender_email
-    message["To"] = reciever_email
-
-    print(sender_email, reciever_email, sender_password, smtp_host, smtp_port)
+    recipients = ["cdalzate91@gmail.com", "mrguidoc@gmail.com",
+                    "kevtorricov@gmail.com",
+                      "adrianaisea99@gmail.com", "alexriascos159@gmail.com", 
+                      "yshungria@unal.edu.co", "cesarrrr2003@gmail.com"
+                    ]
+    
+    message["To"] = ", ".join(recipients)
 
     text = "Your order has been confirmed!"
 
+    html_content = """
+        <html>
+            <body>
+                <h1 style="color:green;">Your Tacos will arrive Soon 🌮!</h1>
+                <p>This email is sent using <b>Tacostoso Backend</b> and Gmail's SMTP server.</p>
+            </body>
+        </html>
+    """
+
     part1 = MIMEText(text, "plain")
+
+    part2 = MIMEText(html_content, "html")
 
     message.attach(part1)
 
+    message.attach(part2)
+
     smtp_connection = smtplib.SMTP(smtp_host, smtp_port)
 
-    smtp_connection.starttls()
+    smtp_connection.starttls() # Secure the connection
 
     smtp_connection.login(sender_email, sender_password)
 
-    smtp_connection.sendmail(sender_email, reciever_email, message.as_string())
+    smtp_connection.sendmail(sender_email, recipients, message.as_string())
 
     smtp_connection.quit()
 
