@@ -9,10 +9,51 @@ from datetime import datetime
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import bcrypt
 
+import os
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+sender_email = os.getenv("SMTP_USERNAME")
+sender_password = os.getenv("SMTP_PASSWORD")
+smtp_host = os.getenv("SMTP_HOST")
+smtp_port = os.getenv("SMTP_PORT")
+reciever_email = os.getenv("RECIEVERS_EMAIL")
+
+
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+
+@api.route('/send-email', methods=['POST'])
+def send_email():
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = "Tacos App - Order Confirmation"
+    message["From"] = sender_email
+    message["To"] = reciever_email
+
+    print(sender_email, reciever_email, sender_password, smtp_host, smtp_port)
+
+    text = "Your order has been confirmed!"
+
+    part1 = MIMEText(text, "plain")
+
+    message.attach(part1)
+
+    smtp_connection = smtplib.SMTP(smtp_host, smtp_port)
+
+    smtp_connection.starttls()
+
+    smtp_connection.login(sender_email, sender_password)
+
+    smtp_connection.sendmail(sender_email, reciever_email, message.as_string())
+
+    smtp_connection.quit()
+
+    return jsonify({"msg": "Email sent"}), 200
 
 @api.route("/login", methods=["POST"])
 def login():
