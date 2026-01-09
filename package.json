@@ -79,6 +79,6 @@
 		"react-dom": "^16.8.4",
 		"react-hot-toast": "^2.4.1",
 		"react-polyfills": "0.0.1",
-		"react-router-dom": "^6.3.0"
+		"react-router-dom": "^6.30.3"
 	}
 }
